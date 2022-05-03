@@ -19,7 +19,7 @@ export default {
             canvas: null,
             Ctx: null,
             dataArray: {},
-            barWidth: 2,
+            barWidth: 5,
             barHeight: 0,
             x: 0,            
         }
@@ -31,7 +31,6 @@ export default {
                 this.animate()
             }
             else {
-                console.log('im in')
                 this.audioCtx = new AudioContext()
                 this.audioSrc = this.audioCtx.createMediaElementSource(this.audio)
                 this.analyser = this.audioCtx.createAnalyser();
@@ -67,7 +66,7 @@ export default {
                 this.Ctx.save()
                 this.Ctx.translate(this.canvas.width/2, this.canvas.height/2)
                 this.Ctx.rotate( i * 3)
-                this.Ctx.strokeStyle = 'white'
+                this.Ctx.strokeStyle = 'green'
                 this.Ctx.beginPath()
 
                 this.Ctx.moveTo(15,0);
