@@ -1,5 +1,6 @@
 <template>
   <div class="app">
+    <div><img src="./assets/background_SSA.jpg" id="backgroundapp" alt="backgroundapp"></div>
     <div id="musicPlayer">
       <div class="songList">
         <div class="headerSongList">
@@ -40,7 +41,6 @@
               v-bind:max="this.secDuration"
               v-model="this.currentTime"
               v-on:change="changeCurrentTime()"
-              v-on:focus="pauseSong()"
             />
             <p>{{ totalDuration }}</p>
           </div>
@@ -50,11 +50,14 @@
         </div>
         <div class="Display__Option">
           <div class="Display__Option__Trick">
-            <button id="Shuffle" v-on:click="Shuffle">
+            <button id="Shuffle" class="off" v-on:click="Shuffle">
               <font-awesome-icon icon="shuffle" />
             </button>
-            <button id="Loop" v-on:click="Loop">
+            <button id="Loop" class="off" v-on:click="Loop">
               <font-awesome-icon icon="repeat" />
+            </button>
+            <button id="Visu" class="off" v-on:click="VisuDisplay()">
+                <font-awesome-icon icon="eye" />
             </button>
           </div>
           <div class="Display__Option__Volume">
@@ -110,26 +113,19 @@
         </div>
       </div>
     </div>
-    
-<!--     
-    <div>
-        <button v-on:click="go()">visu</button>
-        <canvas id="Visualizer" width="500" height="500"></canvas>
-    </div> -->
-
-
-
-
+    <SporeVisualisateur v-bind:audio="this.audio" ref="SporeVisualisateur"></SporeVisualisateur>
   </div>
 </template>
 
 <script>
 import SongOnList from "./components/SongOnList.vue";
+import SporeVisualisateur from "./components/SporeVisualisateur.vue"
 
 
 export default {
   name: "App",
   components: {
+    'SporeVisualisateur': SporeVisualisateur,
     SongOnList,
 
   },
@@ -146,7 +142,8 @@ export default {
       totalDuration: "0:00",
       currentDuration: "0:00",
       secDuration: 0,
-      currentTime: 0,        
+      currentTime: 0,
+      background: './assets/background_SSA.png'       
     };
   },
   methods: {
@@ -238,7 +235,8 @@ export default {
         this.audio.play();
       } else {
         this.audio.src = this.$store.state.currentAudio.url;
-          this.audio.play();
+        this.audio.preload = "auto"
+        this.audio.play()
         setTimeout(
              function () {
                this.getInfo();
@@ -249,21 +247,19 @@ export default {
           this.$store.commit("SwitchOnOff", this.$store.state.currentAudio.id);          
       }
       this.playPause = true;
-      window.clearInterval(this.songInteval);
-      this.songInterval = setInterval(() => {
-        this.currentTime = Math.floor(this.audio.currentTime);
-        this.transformInMin(this.currentTime);
-      }, 1000);
+      this.audio.addEventListener('timeupdate', () => {
+        this.currentTime = Math.floor(this.audio.currentTime) 
+        this.transformInMin(this.currentTime)
+        }
+      )
     },
     pauseSong() {
       this.audio.pause();
       this.playPause = false;
-      window.clearInterval(this.songInteval);
       return
     },
     stopSong() {
       this.audio.pause();
-      window.clearInterval(this.songInteval);
       this.audio.currentTime = 0;
       this.playPause = false;
       this.$store.state.onPlay = false;
@@ -343,23 +339,43 @@ export default {
     },
     Loop() {
       this.$store.commit("changeLoop");
+      let Loop = document.getElementById("Loop")
       if (this.onLoop) {
         this.audio.loop = false;
         this.onLoop = false;
-        document.getElementById("Loop").style.color = "green";
+        Loop.removeAttribute("class", "on");
+        Loop.setAttribute("class", "off")
       } else {
         this.audio.loop = true;
         this.onLoop = true;
-        document.getElementById("Loop").style.color = "red";
+        Loop.removeAttribute("class", "off");
+        Loop.setAttribute("class", "on");
       }
     },
     Shuffle() {
+      let Shuffle = document.getElementById("Shuffle")
       if (this.onShuffle) {
         this.onShuffle = false;
-        document.getElementById("Shuffle").style.color = "green";
+        Shuffle.removeAttribute("class", "on");
+        Shuffle.setAttribute("class", "off")
       } else {
         this.onShuffle = true;
-        document.getElementById("Shuffle").style.color = "red";
+        Shuffle.removeAttribute("class", "off");
+        Shuffle.setAttribute("class", "on")
+      }
+    },
+    VisuDisplay() {
+      let Visu = document.getElementById("Visu")
+      if(this.$store.state.VisuOn) {
+          this.$store.state.VisuOn = false
+          Visu.removeAttribute("class", "on");
+          Visu.setAttribute("class", "off")
+      }
+      else {
+          this.$store.state.VisuOn = true;
+          this.$refs.SporeVisualisateur.initPlayer()
+          Visu.removeAttribute("class", "off");
+          Visu.setAttribute("class", "on")
       }
     },
     changeCurrentTime() {
@@ -461,6 +477,18 @@ body {
   background: $backgroundcolor;
   font-family: "Cafe";
 }
+
+#backgroundapp {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -5;
+  width: 100%;
+  height: 100%;
+  opacity: 0.05;
+}
 .app {
   text-align: center;
   color: green;
@@ -545,12 +573,25 @@ body {
           display: flex;
           justify-content: space-around;
           width: 30%;
-          #Shuffle {
+          .off {
             @include withouBorder;
+            opacity: 0.5;
+          }
+          .on {
+            border-radius: 5px;
+            background: linear-gradient(145deg, #b9c9a5, #dbefc4);
+            box-shadow:  10px 10px 25px #aebe9c,
+             -10px -10px 25px #ecffd2;
+             opacity: 1;
+             border: 0;
+          }
+          #Shuffle {
             color: green;
           }
           #Loop {
-            @include withouBorder;
+            color: green;
+          }
+          #Visu {
             color: green;
           }
         }

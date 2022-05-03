@@ -23,6 +23,7 @@ import {
     faVolumeOff,
     faVolumeXmark,
     faEject,
+    faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import {
     FontAwesomeIcon
@@ -41,7 +42,11 @@ library.add(faPlay,
     faVolumeOff,
     faVolumeXmark,
     faShuffle,
-    faEject)
+    faEject,
+    faEye)
+
+
+    
 createApp(App)
     .use(store)
     .component("font-awesome-icon", FontAwesomeIcon)

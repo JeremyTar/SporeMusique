@@ -5,6 +5,7 @@ import {
 const store = createStore({
             state() {
                 return {
+                    VisuOn: false,
                     onPlay: false,
                     currentAudio: {},
                     allAlbum: [{
