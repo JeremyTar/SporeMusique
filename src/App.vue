@@ -112,8 +112,12 @@
           </button>
         </div>
       </div>
+    <div class="gitLink">
+        <button v-on:click="openGit">View on Github</button>
+    </div>      
     </div>
     <SporeVisualisateur v-bind:audio="this.audio" ref="SporeVisualisateur"></SporeVisualisateur>
+
   </div>
 </template>
 
@@ -397,6 +401,9 @@ export default {
         this.nextSong();
       }
     },
+    openGit() {
+      window.open("https://github.com/JeremyTar/SporeMusique")
+    }
   },
   created() {
     this.audio = new Audio();
@@ -818,6 +825,18 @@ body {
         border: 3px solid $backgroundcolor;
       }
     }
+    .gitLink {
+    margin-top: -15px;
+    button {
+      background-color: transparent;
+      border: none;
+      transition: 0.5s;
+    }
+    button:hover {
+      color: #205928;
+      border-bottom: 1px solid #205928
+    };
+  }
   }
 }
 </style>

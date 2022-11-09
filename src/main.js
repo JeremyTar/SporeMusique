@@ -25,28 +25,36 @@ import {
     faEject,
     faEye,
 } from "@fortawesome/free-solid-svg-icons";
+
+import {
+    faGithub
+} from '@fortawesome/free-brands-svg-icons';
+
+
 import {
     FontAwesomeIcon
 } from "@fortawesome/vue-fontawesome";
 
-library.add(faPlay, 
-    faStop, 
-    faPause, 
-    faAngleDoubleLeft, 
-    faAngleDoubleRight, 
+library.add(faPlay,
+    faStop,
+    faPause,
+    faAngleDoubleLeft,
+    faAngleDoubleRight,
     faAngleLeft,
     faAngleRight,
-    faRepeat, 
-    faVolumeLow, 
-    faVolumeHigh, 
+    faRepeat,
+    faVolumeLow,
+    faVolumeHigh,
     faVolumeOff,
     faVolumeXmark,
     faShuffle,
     faEject,
-    faEye)
+    faEye,
+    faGithub
+    )
 
 
-    
+
 createApp(App)
     .use(store)
     .component("font-awesome-icon", FontAwesomeIcon)
