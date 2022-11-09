@@ -85,9 +85,7 @@ export default {
     mounted() {
         this.canvas = document.getElementById("SporeVisualisateur");
         this.canvas.height = window.innerHeight
-        console.log(this.canvas.height +'heigt')
         this.canvas.width = window.innerWidth
-        console.log(this.canvas.width +'heigt')
         this.Ctx = this.canvas.getContext("2d");
 
     }

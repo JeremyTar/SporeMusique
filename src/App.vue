@@ -131,7 +131,6 @@ export default {
   },
   data() {
     return {
-      songInteval: null,
       previousVolume: 0,
       onShuffle: false,
       playPause: false,
@@ -149,20 +148,26 @@ export default {
   methods: {
     // NAVIGATE
     previousAlbum() {
+      if(this.audio == null) {
+        return
+      }
       if (this.albumIndex == 0) {
-        this.albumIndex = 2;
+        this.albumIndex = this.$store.state.allAlbum.length - 1;
       } else {
         this.albumIndex--;
       }
     },
     nextAlbum() {
-      if (this.albumIndex == 2) {
+      if (this.albumIndex == this.$store.state.allAlbum.length - 1) {
         this.albumIndex = 0;
       } else {
         this.albumIndex++;
       }
     },
     nextSong() {
+      if(this.audio == null) {
+        return
+      }
       if (this.onShuffle) {
         this.stopSong();
         this.getRandomSong();
@@ -249,7 +254,7 @@ export default {
       this.playPause = true;
       this.audio.addEventListener('timeupdate', () => {
         this.currentTime = Math.floor(this.audio.currentTime) 
-        this.transformInMin(this.currentTime)
+        this.transformInMin(this.currentTime)        
         }
       )
     },
@@ -309,7 +314,6 @@ export default {
       }
     },
     buildNewSong(indexAlbum, indexSong) {
-      clearInterval(this.songInteval);
       if (this.$store.state.onPlay == true) {
         this.$store.commit("SwitchOnOff", this.$store.state.currentAudio.id);
       }
